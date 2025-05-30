@@ -1,0 +1,185 @@
+Vagrant.configure("2") do |config|
+    servers=[
+        {
+          :hostname => "Ansible",
+          :ip => "192.20.1.15",
+          :name => 'Ansible',
+
+		  :hostname1 => "manticore",
+          :ip1 => "192.20.1.16",
+          :name1 => 'manticore',
+
+		   :hostname2 => "manticore1",
+          :ip2 => "192.20.1.17",
+          :name2 => 'manticore1',
+
+		  :hostname3 => "manticore2",
+          :ip3 => "192.20.1.18",
+          :name3 => 'manticore2',
+
+		  :hostname4 => "manticore3",
+          :ip4 => "192.20.1.19",
+          :name4 => 'manticore3',
+
+		  :hostname5 => "manticore4",
+          :ip5 => "192.20.1.20",
+          :name5 => 'manticore4',
+
+		  :hostname6 => "clone_site",
+          :ip6 => "192.20.1.21",
+          :name6 => 'clone_site',
+
+		  :hostname7 => "docker",
+          :ip7 => "192.20.1.22",
+          :name7 => 'docker'
+
+		}
+      ]
+    servers.each do |machine|
+        config.vm.define machine[:hostname] do |node|
+            node.vm.box = "ubuntu/jammy64"
+            node.vm.hostname = machine[:hostname]
+            node.vm.network :private_network, ip: machine[:ip]
+            node.vm.provision "shell", inline: <<-SHELL
+      # Обновление системы
+                sudo apt update && sudo apt upgrade -y
+                sudo apt dist-upgrade -y
+                sudo apt autoremove -y
+				sudo apt install ansible -yans
+            SHELL
+
+            node.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", 2048, "--cpus", 2]
+                vb.name = machine[:name]
+          end
+            end
+
+    config.vm.define machine[:hostname1] do |node|
+                node.vm.box = "ubuntu/jammy64"
+                node.vm.hostname = machine[:hostname1]
+                node.vm.disk :disk, size: "5GB", name: "extra_storage"
+                node.vm.network :private_network, ip: machine[:ip1]
+                node.vm.provision "shell", inline: <<-SHELL
+                sudo apt update && sudo apt upgrade -y
+                sudo apt dist-upgrade -y
+                sudo apt autoremove -y
+            SHELL
+
+            node.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", 2048, "--cpus", 2]
+                vb.name = machine[:name1]
+
+            end
+                end
+
+	config.vm.define machine[:hostname2] do |node|
+                node.vm.box = "ubuntu/jammy64"
+                node.vm.hostname = machine[:hostname2]
+                node.vm.disk :disk, size: "5GB", name: "extra_storage"
+                node.vm.network :private_network, ip: machine[:ip2]
+                node.vm.provision "shell", inline: <<-SHELL
+                sudo apt update && sudo apt upgrade -y
+                sudo apt dist-upgrade -y
+                sudo apt autoremove -y
+            SHELL
+
+            node.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", 2048, "--cpus", 2]
+                vb.name = machine[:name2]
+
+            end
+                end
+
+	config.vm.define machine[:hostname3] do |node|
+                node.vm.box = "ubuntu/jammy64"
+                node.vm.hostname = machine[:hostname3]
+                node.vm.disk :disk, size: "5GB", name: "extra_storage"
+                node.vm.network :private_network, ip: machine[:ip3]
+                node.vm.provision "shell", inline: <<-SHELL
+                sudo apt update && sudo apt upgrade -y
+                sudo apt dist-upgrade -y
+                sudo apt autoremove -y
+            SHELL
+
+            node.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", 2048, "--cpus", 2]
+                vb.name = machine[:name3]
+
+            end
+                end
+
+    config.vm.define machine[:hostname4] do |node|
+                node.vm.box = "ubuntu/jammy64"
+                node.vm.hostname = machine[:hostname4]
+                node.vm.disk :disk, size: "5GB", name: "extra_storage"
+                node.vm.network :private_network, ip: machine[:ip4]
+                node.vm.provision "shell", inline: <<-SHELL
+                sudo apt update && sudo apt upgrade -y
+                sudo apt dist-upgrade -y
+                sudo apt autoremove -y
+            SHELL
+
+            node.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", 2048, "--cpus", 2]
+                vb.name = machine[:name4]
+
+            end
+                end
+
+
+    config.vm.define machine[:hostname5] do |node|
+                node.vm.box = "ubuntu/jammy64"
+                node.vm.hostname = machine[:hostname5]
+                node.vm.disk :disk, size: "5GB", name: "extra_storage"
+                node.vm.network :private_network, ip: machine[:ip5]
+                node.vm.provision "shell", inline: <<-SHELL
+                sudo apt update && sudo apt upgrade -y
+                sudo apt dist-upgrade -y
+                sudo apt autoremove -y
+            SHELL
+
+            node.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", 2048, "--cpus", 2]
+                vb.name = machine[:name5]
+
+            end
+                end
+
+
+    config.vm.define machine[:hostname6] do |node|
+                node.vm.box = "ubuntu/jammy64"
+                node.vm.hostname = machine[:hostname6]
+                node.vm.network :private_network, ip: machine[:ip6]
+                node.vm.provision "shell", inline: <<-SHELL
+                sudo apt update && sudo apt upgrade -y
+                sudo apt dist-upgrade -y
+                sudo apt autoremove -y
+            SHELL
+
+            node.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", 2048, "--cpus", 2]
+                vb.name = machine[:name6]
+
+            end
+                end
+
+config.vm.define machine[:hostname7] do |node|
+                node.vm.box = "ubuntu/jammy64"
+                node.vm.hostname = machine[:hostname7]
+                node.vm.network :private_network, ip: machine[:ip7]
+                node.vm.provision "shell", inline: <<-SHELL
+                sudo apt update && sudo apt upgrade -y
+                sudo apt dist-upgrade -y
+                sudo apt autoremove -y
+            SHELL
+
+            node.vm.provider :virtualbox do |vb|
+                vb.customize ["modifyvm", :id, "--memory", 2048, "--cpus", 2]
+                vb.name = machine[:name7]
+
+            end
+                end
+
+
+    end
+end

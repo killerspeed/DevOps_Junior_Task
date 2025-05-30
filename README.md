@@ -253,16 +253,59 @@ ansible-playbook -i inventory install_manticore.yml
 
 ```
 
+## 5 Работа с Docker
+### _Задание:_
+- _Развернуть связку MySQL и ManticoreSearch через docker-compose, заполнить таблицы БД тестовыми данными и 
+реализовать ограничение уникальности на уровне MySQL_
+
+### 1. Docker Compose конфигурация
+Создан файл [docker-compose.yml](docker/docker-compose.yml), содержащий:
+- Сервис **MySQL 8.0.39** с предварительно настроенной БД `jobrate`
+- Сервис **ManticoreSearch 6.3.6**
+- Настроена сеть для взаимодействия между сервисами
+
+### 1. Настройка MySQL сервиса
+- Развернут контейнер с MySQL 8.0.39
+- Создана база данных `jobrate`
+- В БД создана таблица `vacancy` с требуемой структурой
+- Реализовано ограничение уникальности для комбинации полей с помощью файла [init.sql](docker/init.sql)
+
+### Настройка ManticoreSearch
+
+```
+CREATE TABLE vacancy
+(
+    id BIGINT,
+    title TEXT,
+    salary_from FLOAT,
+    salary_to FLOAT,
+    country_id INT,
+    region_id INT,
+    city_id INT,
+    created_at TIMESTAMP
+)
+engine='rowwise'  
+html_strip='1'   
+min_word_len='3'  
+stopwords='en,ru' 
+morphology='stem_en,stem_ru'
+```
+
+```
+INSERT INTO vacancy (id, title, salary_from, salary_to, country_id, region_id, city_id, created_at)
+VALUES
+(1, 'ыфафыафыr', 150000, 200000, 1, 10, 100, 1609459200),  -- 2021-01-01
+(2, 'афыафыафы', 120000, 180000, 1, 10, 101, 1612137600); -- 2021-02-01
+```
 
 
+### Инструкция по запуску
+- Выполнить docker-compose up -d
 
+#### Для проверки работы:
 
-
-
-
-
-
-
+- MySQL: docker exec -it mysql mysql -uroot -p
+- Manticore: docker exec -it manticore mysql -h0 -P9306
 
 
 
