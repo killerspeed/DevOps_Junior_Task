@@ -1,16 +1,15 @@
 #!/bin/sh
 
-# Проверка аргументов
+
 if [ $# -eq 0 ]; then
   echo "Использование: $0 'строка поиска' [лимит]"
   exit 1
 fi
 
-# Экранирование кавычек (совместимый с /bin/sh способ)
 SEARCH_TERM=$(echo "$1" | sed "s/'/''/g")
 LIMIT=${2:-20}
 
-# Простой SQL-запрос без сложных функций
+
 QUERY="SELECT
   id,
   title,
@@ -26,7 +25,6 @@ ORDER BY
   salary_to DESC
 LIMIT $LIMIT"
 
-# Выполнение запроса и форматирование вывода
 mysql -P9306 -h0 -N -e "$QUERY" | awk -F'\t' '
 function escape(s) {
   gsub(/'\''/, "'\''\\'\'''\''", s)  # Экранируем одинарные кавычки

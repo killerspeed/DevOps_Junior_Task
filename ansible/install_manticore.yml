@@ -1,6 +1,6 @@
 ---
 - name: Download Manticore packages
-  hosts: all
+  hosts: search_servers
   become: yes
   tasks:
     - name: Create download directory
@@ -36,22 +36,22 @@
       register: install_results
       ignore_errors: yes
 
-     - name: start manticore
-	 ansible.builtin.systemd:
-   	   name: manticore
-           state: started
-           enabled: yes
-           daemon_reload: yes
+    - name: start manticore
+      ansible.builtin.systemd:
+         name: manticore
+         state: started
+         enabled: yes
+         daemon_reload: yes
 
-     - name: dir
-	 ansible.builtin.mount:
-    	   path: /var/lib/manticore/data/disk_index
-           src: /dev/sdc
-           fstype: ext4
-           state: mounted
-           opts: defaults
+    - name: dir
+      ansible.builtin.mount:
+         path: /var/lib/manticore
+         src: /dev/sdc
+         fstype: ext4
+         state: mounted
+         opts: defaults
 
-    - name: Give
+    - name: Permission
       ansible.builtin.file:
          path: /var/lib/manticore/
          owner: manticore
