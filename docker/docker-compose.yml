@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0.39
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: jobrate
+      MYSQL_USER: jobrate_user
+      MYSQL_PASSWORD: jobrate_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    #command:
+    # --default-authentication-plugin=mysql_native_password
+
+  manticore:
+    image: manticoresearch/manticore:6.3.6
+    container_name: manticoresearch
+    restart: always
+    ports:
+      - "9306:9306"    # MySQL protocol (SQL interface)
+      - "9312:9312"    # HTTP API
+    volumes:
+  #    - ./manticore/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./manticore/data:/var/lib/manticore/data

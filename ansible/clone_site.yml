@@ -1,0 +1,32 @@
+- hosts: all
+  vars:
+    repo_url: "git@github.com:killerspeed/DevOps_Junior_Test_Task.git"
+    deploy_path: "/var/www/html/"
+
+  tasks:
+    - name: directory
+      become: yes
+      file:
+        path: "{{ deploy_path }}"
+        state: directory
+        owner: ansible
+        group: ansible
+        mode: '2775'
+
+    - name: Clone repository
+      become: no
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ deploy_path }}"
+        update: no
+        force: yes
+      environment:
+        GIT_SSH_COMMAND: "ssh -i /home/ansible/.ssh/id_rsa -o IdentitiesOnly=yes"
+
+    - name: Fix permissions
+      become: yes
+      file:
+        path: "{{ deploy_path }}"
+        owner: www-data
+        group: www-data
+        recurse: yes

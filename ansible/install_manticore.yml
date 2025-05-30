@@ -1,0 +1,59 @@
+---
+- name: Download Manticore packages
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create download directory
+      ansible.builtin.file:
+        path: "{{ download_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download packages
+      ansible.builtin.get_url:
+        url: "{{ repo_url }}/{{ item.name }}_{{ item.version }}_{{ item.type }}.deb"
+        dest: "{{ download_dir }}/{{ item.name }}_{{ item.version }}.deb"
+      loop: "{{ all_packages }}"
+    - name: test
+      ansible.builtin.get_url:
+        url: "{{ repo_url }}/{{ item.name }}-{{ item.version }}.deb"
+        dest: "{{ download_dir }}/{{ item.name }}_{{ item.version }}.deb"
+      loop: "{{ one_packages }}"
+
+    - name: Install one packages
+      ansible.builtin.apt:
+        deb: "{{ download_dir }}/{{ item.name }}_{{ item.version }}.deb"
+        update_cache: yes
+      loop: "{{ one_packages }}"
+      register: install_results
+      ignore_errors: yes
+
+    - name: Install all packages
+      ansible.builtin.apt:
+        deb: "{{ download_dir }}/{{ item.name }}_{{ item.version }}.deb"
+        update_cache: yes
+      loop: "{{ all_packages }}"
+      register: install_results
+      ignore_errors: yes
+
+     - name: start manticore
+	 ansible.builtin.systemd:
+   	   name: manticore
+           state: started
+           enabled: yes
+           daemon_reload: yes
+
+     - name: dir
+	 ansible.builtin.mount:
+    	   path: /var/lib/manticore/data/disk_index
+           src: /dev/sdc
+           fstype: ext4
+           state: mounted
+           opts: defaults
+
+    - name: Give
+      ansible.builtin.file:
+         path: /var/lib/manticore/
+         owner: manticore
+         group: manticore
+         recurse: yes
