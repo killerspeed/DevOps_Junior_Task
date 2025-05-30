@@ -150,6 +150,18 @@ ansible webservers -m ping
 
 Итоговый Playbook [(clone_site.yml)](ansible/clone_site.yml)
 
+
+makefile
+```
+# Запуск всех сервисов из docker-compose.yml
+up:
+	docker-compose up -d
+
+# Остановка всех сервисов
+down:
+	docker-compose down
+```
+
 ## 4 Работа с виртуальными машинами и manticore
 
 ### Задание:
