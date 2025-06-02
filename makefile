@@ -10,6 +10,4 @@ down:
 ```
 # Запуск скрипта для заполнения данных в MySQL
 seed-mysql:
-docker-compose exec mysql bash -c "mysql -u пользователь -pпароль база_данных < /путь/в/контейнере/скрипт.sql"
-
-docker-compose exec mysql sh -c 'mysql -u $${root} -p$${rootpassword} $${jobrate < /scripts/mysql/seed.sql'
+	docker-compose exec mysql sh -c 'mysql -u $${root} -p$${rootpassword} $${jobrate < /scripts/mysql/seed.sql'
